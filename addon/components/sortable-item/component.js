@@ -181,6 +181,12 @@ export default Component.extend({
   _onDrag(ev) {
     this._preventDefaultBehavior(ev);
 
+    // Check if the right mouse button is still being clicked
+    const isRightClicking = ev.buttons === 1;
+    if(!isRightClicking){
+      this._onDrop();
+    }
+
     let sortableContainer = get(this, 'sortableContainer');
     let element = get(this, 'element');
     let cloneNode = get(sortableContainer, 'cloneNode');
