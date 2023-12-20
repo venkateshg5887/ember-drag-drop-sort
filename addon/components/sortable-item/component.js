@@ -179,13 +179,21 @@ export default Component.extend({
   },
 
   _onDrag(ev) {
-    this._preventDefaultBehavior(ev);
+    //  Check if the right mouse button is still being clicked
 
-    // Check if the right mouse button is still being clicked
-    const isRightClicking = ev.buttons === 1;
-    if(!isRightClicking){
-      this._onDrop();
-    }
+     const isRightClicking = ev.buttons === 1;
+     if(!isRightClicking) {
+      ev.preventDefault();
+      if(get(this, 'sortableContainer').cloneNode) {
+        // eslint-disable-next-line no-undef
+        $(get(this, 'sortableContainer').cloneNode).remove();
+        this.sendAction('dragend');
+        get(this, 'documentWindow').classList.remove('sortable-attached');
+        get(this, 'element').removeAttribute('style');
+        get(this, 'sortableContainer').stopDrag();
+     }
+      return;
+     }
 
     let sortableContainer = get(this, 'sortableContainer');
     let element = get(this, 'element');
@@ -242,16 +250,18 @@ export default Component.extend({
     if (containmentContainer) {
       containmentContainer.handleScroll(sortableContainer);
     }
+
   },
 
   _onDrop() {
     this.sendAction('dragend');
-
     get(this, 'documentWindow').classList.remove('sortable-attached');
-    get(this, 'documentWindow').removeChild(get(this, 'sortableContainer').cloneNode);
+
+    if(get(this, 'sortableContainer') && (get(this, 'sortableContainer').cloneNode)){
+      get(this, 'documentWindow').removeChild(get(this, 'sortableContainer').cloneNode);
+    }
     get(this, 'element').removeAttribute('style');
     get(this, 'sortableContainer').stopDrag();
-
     if(get(this, 'currentSortPane')) {
       get(this, 'currentSortPane').send('onDrop', get(this, 'element'));
     }
