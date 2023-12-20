@@ -179,6 +179,8 @@ export default Component.extend({
   },
 
   _onDrag(ev) {
+
+    this._preventDefaultBehavior(ev);
     //  Check if the right mouse button is still being clicked
 
      const isRightClicking = ev.buttons === 1;
@@ -188,9 +190,11 @@ export default Component.extend({
         // eslint-disable-next-line no-undef
         $(get(this, 'sortableContainer').cloneNode).remove();
         this.sendAction('dragend');
+
         get(this, 'documentWindow').classList.remove('sortable-attached');
         get(this, 'element').removeAttribute('style');
         get(this, 'sortableContainer').stopDrag();
+
      }
       return;
      }
@@ -250,7 +254,6 @@ export default Component.extend({
     if (containmentContainer) {
       containmentContainer.handleScroll(sortableContainer);
     }
-
   },
 
   _onDrop() {
