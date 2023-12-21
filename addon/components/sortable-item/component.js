@@ -186,6 +186,7 @@ export default Component.extend({
      if(!isRightClicking) {
       ev.preventDefault();
       if(get(this, 'sortableContainer').cloneNode){
+        // eslint-disable-next-line no-undef
         $(get(this, 'sortableContainer').cloneNode).remove();
         this.sendAction('dragend');
         get(this, 'documentWindow').classList.remove('sortable-attached');
